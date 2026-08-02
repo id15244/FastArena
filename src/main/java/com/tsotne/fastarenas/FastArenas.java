@@ -5,6 +5,7 @@ import com.tsotne.fastarenas.Config.ConfigManager;
 import com.tsotne.fastarenas.Event.ArenaCreate;
 import com.tsotne.fastarenas.autoreset.AutoResetManager;
 import com.tsotne.fastarenas.commands.Command;
+import com.tsotne.fastarenas.utils.LoadSchem;
 import it.unimi.dsi.fastutil.Pair;
 import java.io.File;
 import java.util.List;
@@ -69,6 +70,7 @@ public final class FastArenas extends JavaPlugin {
 
     public void reloadEverything() {
         this.configManager.reload();
+        LoadSchem.clearCache();
     }
 
     private void createSchematicFolder() {

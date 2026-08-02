@@ -104,9 +104,10 @@ public class SaveShchem {
                     return;
                 }
 
+                LoadSchem.putCache(filename, clipboard, file.lastModified());
+
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     String arenaSaved = plugin.getConfigManager().getarenasave(filename);
-                    region.size();
                     SendMessageUtils.Sendmessage(player, arenaSaved + " (" + region.size() + ")");
                 });
             });

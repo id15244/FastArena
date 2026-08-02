@@ -80,6 +80,7 @@ public class Command implements CommandExecutor, TabExecutor {
                             this.plugin.getConfig().set("arena." + name + ".clearitems", true);
                             this.plugin.getConfig().set("arena." + name + ".clearcrystal", true);
                             this.plugin.getConfig().set("arena." + name + ".tpplayers", false);
+                            this.plugin.getConfig().set("arena." + name + ".tpupsafe", false);
                             this.plugin.getConfig().set("arena." + name + ".spawn", this.plugin.getConfigManager().getDefaultSpawnName());
                             this.plugin.getConfig().set("arena." + name + ".enabled", true);
                             this.plugin.getConfig().set("arena." + name + ".offset", 0);
@@ -102,11 +103,13 @@ public class Command implements CommandExecutor, TabExecutor {
                             return true;
                         }
 
-                        LoadSchem.loadSchematic(this.plugin, args[1], player);
-                        String msg = this.plugin.getConfigManager().getarenamessage(args[1]);
-                        if (!msg.isEmpty()) {
-                            Bukkit.broadcastMessage(msg);
-                        }
+                        String arenaName = args[1];
+                        LoadSchem.loadSchematic(this.plugin, arenaName, player, () -> {
+                            String msg = this.plugin.getConfigManager().getarenamessage(arenaName);
+                            if (!msg.isEmpty()) {
+                                Bukkit.broadcastMessage(msg);
+                            }
+                        });
 
                         return true;
                     }
@@ -133,6 +136,8 @@ public class Command implements CommandExecutor, TabExecutor {
                         return true;
                     } else {
                         String name = args[1];
+                        this.plugin.getautoResetManager().stopArena(name);
+                        LoadSchem.invalidateCache(name);
                         this.plugin.getConfig().set("arena." + name, null);
                         this.plugin.saveConfig();
                         File schem = new File(new File(this.plugin.getDataFolder(), "arena"), name + ".schem");
@@ -190,7 +195,6 @@ public class Command implements CommandExecutor, TabExecutor {
                     }
 
                     this.plugin.reloadEverything();
-                    this.plugin.getConfigManager().loadBlacklist();
                     SendMessageUtils.Sendmessage(player, this.plugin.getConfigManager().getReloadMessage());
                     return true;
                 case "start":

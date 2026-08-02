@@ -32,6 +32,12 @@ blacklist-Blocks:
   - chest
   - bell
 
+# Gradual schematic paste (less lag on big arenas)
+# reset-batch-size  - X/Z size of one paste batch in blocks
+# reset-batch-delay - ticks to wait between batches (20 ticks = 1s)
+reset-batch-size: 16
+reset-batch-delay: 1
+
 spawn:
   default:
     world: world
@@ -43,8 +49,8 @@ spawn:
     pitch: 0
 
 arena:
-  example:
-    name: "ArenaNameHere"
+  tpspawn:
+    name: "tpspawn"
     world: world
     pos1:
       - 0
@@ -59,6 +65,24 @@ arena:
     clearcrystal: true
     tpplayers: false
     spawn: default
+    enabled: false
+    offset: 0
+    autoreset: 0
+  tpupsafe:
+    name: "tpupsafe"
+    world: world
+    pos1:
+      - 0
+      - 0
+      - 0
+    pos2:
+      - 0
+      - 0
+      - 0
+    message: "&aArena %arena% has been reseted!"
+    clearitems: true
+    clearcrystal: true
+    tpupsafe: true
     enabled: false
     offset: 0
     autoreset: 0

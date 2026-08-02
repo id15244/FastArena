@@ -5,18 +5,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AutoResetManager {
-    private final Map<String, AutoResetArena> arenas = new ConcurrentHashMap();
+    private final Map<String, AutoResetArena> arenas = new ConcurrentHashMap<>();
 
     public void registerArena(String id, long delay, long offset, String message, FastArenas plugin) {
-        if (!this.arenas.containsKey(id)) {
+        String key = id.toLowerCase();
+        if (!this.arenas.containsKey(key)) {
             AutoResetArena arena = new AutoResetArena(id, delay, offset, message);
             arena.start(plugin);
-            this.arenas.put(id, arena);
+            this.arenas.put(key, arena);
         }
     }
 
     public void stopArena(String id) {
-        AutoResetArena arena = (AutoResetArena)this.arenas.remove(id);
+        AutoResetArena arena = this.arenas.remove(id.toLowerCase());
         if (arena != null) {
             arena.stop();
         }
@@ -28,10 +29,10 @@ public class AutoResetManager {
     }
 
     public boolean isRegistered(String id) {
-        return this.arenas.containsKey(id);
+        return this.arenas.containsKey(id.toLowerCase());
     }
 
     public AutoResetArena getArena(String id) {
-        return (AutoResetArena)this.arenas.get(id.toLowerCase());
+        return this.arenas.get(id.toLowerCase());
     }
 }

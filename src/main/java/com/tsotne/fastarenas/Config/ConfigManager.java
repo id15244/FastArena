@@ -3,6 +3,7 @@ package com.tsotne.fastarenas.Config;
 import com.tsotne.fastarenas.FastArenas;
 import com.tsotne.fastarenas.utils.Color;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ public class ConfigManager {
     public void reload() {
         this.plugin.reloadConfig();
         this.config = this.plugin.getConfig();
+        this.loadBlacklist();
     }
 
     private String color(String msg) {
@@ -184,16 +186,34 @@ public class ConfigManager {
     }
 
     public void loadBlacklist() {
-        this.blacklisted = (Set<String>)this.plugin
+        this.blacklisted = this.plugin
                 .getConfig()
                 .getStringList("blacklist-Blocks")
                 .stream()
-                .map(name -> name.toUpperCase())
+                .map(ConfigManager::normalizeBlockName)
                 .collect(Collectors.toSet());
     }
 
+    public boolean isBlacklistEmpty() {
+        return this.blacklisted == null || this.blacklisted.isEmpty();
+    }
+
     public boolean isBlacklisted(String material) {
-        return this.blacklisted.contains(material.toUpperCase());
+        if (this.blacklisted == null || this.blacklisted.isEmpty()) {
+            return false;
+        }
+        return this.blacklisted.contains(normalizeBlockName(material));
+    }
+
+    public static String normalizeBlockName(String material) {
+        if (material == null) {
+            return "";
+        }
+        String upper = material.toUpperCase(Locale.ROOT);
+        if (upper.startsWith("MINECRAFT:")) {
+            return upper.substring("MINECRAFT:".length());
+        }
+        return upper;
     }
 
     public String getReloadMessage() {

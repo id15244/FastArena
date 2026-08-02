@@ -25,10 +25,12 @@ public class AutoResetArena {
         this.task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             plugin.getLogger().info("Auto-reset for arena " + this.name);
             this.nextResetTimeMillis = System.currentTimeMillis() + this.delayTicks * 50L;
-            LoadSchem.loadSchematic(plugin, this.name, null);
-            if (!plugin.getConfigManager().getarenamessage(this.name).isEmpty()) {
-                Bukkit.broadcastMessage(plugin.getConfigManager().getarenamessage(this.name));
-            }
+            LoadSchem.loadSchematic(plugin, this.name, null, () -> {
+                String msg = plugin.getConfigManager().getarenamessage(this.name);
+                if (!msg.isEmpty()) {
+                    Bukkit.broadcastMessage(msg);
+                }
+            });
         }, this.offsetTicks, this.delayTicks);
     }
 
