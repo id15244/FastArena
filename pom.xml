@@ -8,7 +8,7 @@
 
     <groupId>com.tsotne</groupId>
     <artifactId>FastArenas</artifactId>
-    <version>2.5</version>
+    <version>2.5.1</version>
     <packaging>jar</packaging>
 
     <name>FastArenas</name>

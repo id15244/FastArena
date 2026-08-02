@@ -86,6 +86,7 @@ public class Command implements CommandExecutor, TabExecutor {
                             this.plugin.getConfig().set("arena." + name + ".offset", 0);
                             this.plugin.getConfig().set("arena." + name + ".autoreset", 0);
                             this.plugin.saveConfig();
+                            this.plugin.getConfigManager().cacheArenaMessage(name);
                             SaveShchem.saveSelectionToSchem(this.plugin, player, ArenaCreate.pos1, ArenaCreate.pos2, name, format);
                             return true;
                         }
@@ -138,6 +139,7 @@ public class Command implements CommandExecutor, TabExecutor {
                         String name = args[1];
                         this.plugin.getautoResetManager().stopArena(name);
                         LoadSchem.invalidateCache(name);
+                        this.plugin.getConfigManager().invalidateArena(name);
                         this.plugin.getConfig().set("arena." + name, null);
                         this.plugin.saveConfig();
                         File schem = new File(new File(this.plugin.getDataFolder(), "arena"), name + ".schem");
@@ -166,8 +168,9 @@ public class Command implements CommandExecutor, TabExecutor {
                         this.plugin.getConfig().set(basePath + ".pos", List.of(location.getX(), location.getY(), location.getZ()));
                         this.plugin.getConfig().set(basePath + ".yaw", location.getYaw());
                         this.plugin.getConfig().set(basePath + ".pitch", location.getPitch());
-                        SendMessageUtils.Sendmessage(player, this.plugin.getConfigManager().getspawnsaved(spawnName));
                         this.plugin.saveConfig();
+                        this.plugin.getConfigManager().cacheSpawn(spawnName);
+                        SendMessageUtils.Sendmessage(player, this.plugin.getConfigManager().getspawnsaved(spawnName));
                         return true;
                     }
                 case "wand":

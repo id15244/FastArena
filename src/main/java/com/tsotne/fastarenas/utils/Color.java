@@ -4,23 +4,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 
-public class Color {
+public final class Color {
+    private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
+
+    private Color() {
+    }
+
     public static String translateColors(String message) {
-        Pattern pattern = Pattern.compile("(#[a-fA-F0-9]{6})");
-
-        for (Matcher matcher = pattern.matcher(message); matcher.find(); matcher = pattern.matcher(message)) {
-            String hexCode = message.substring(matcher.start(), matcher.end());
-            String replaceSharp = hexCode.replace('#', 'x');
-            char[] ch = replaceSharp.toCharArray();
-            StringBuilder builder = new StringBuilder();
-
-            for (char c : ch) {
-                builder.append("&" + c);
-            }
-
-            message = message.replace(hexCode, builder.toString());
+        if (message == null || message.isEmpty()) {
+            return "";
         }
 
-        return ChatColor.translateAlternateColorCodes('&', message).replace('&', '§');
+        if (message.indexOf('#') >= 0) {
+            Matcher matcher = HEX_PATTERN.matcher(message);
+            StringBuilder out = new StringBuilder(message.length() + 32);
+            while (matcher.find()) {
+                String hex = matcher.group();
+                StringBuilder replacement = new StringBuilder(14);
+                replacement.append("&x");
+                for (int i = 1; i < hex.length(); i++) {
+                    replacement.append('&').append(hex.charAt(i));
+                }
+                matcher.appendReplacement(out, Matcher.quoteReplacement(replacement.toString()));
+            }
+            matcher.appendTail(out);
+            message = out.toString();
+        }
+
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

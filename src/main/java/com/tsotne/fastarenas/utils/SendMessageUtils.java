@@ -14,26 +14,20 @@ public class SendMessageUtils {
     }
 
     public static void Sendmessage(@Nullable CommandSender sender, String message) {
-        FastArenas plugin = (FastArenas)JavaPlugin.getPlugin(FastArenas.class);
-        String type = plugin.getConfig().getString("message-type", "message").toLowerCase();
-        if (sender instanceof Player player) {
-            byte var6 = -1;
-            switch (type.hashCode()) {
-                case 1852186250:
-                    if (type.equals("action_bar")) {
-                        var6 = 0;
-                    }
-                default:
-                    switch (var6) {
-                        case 0:
-                            player.sendActionBar(message);
-                            break;
-                        default:
-                            player.sendMessage(message);
-                    }
-            }
-        } else {
+        if (message == null) {
+            return;
+        }
+        FastArenas plugin = JavaPlugin.getPlugin(FastArenas.class);
+        if (!(sender instanceof Player player)) {
             plugin.getLogger().info(message);
+            return;
+        }
+
+        String type = plugin.getConfigManager().getMessageType();
+        if ("action_bar".equals(type)) {
+            player.sendActionBar(message);
+        } else {
+            player.sendMessage(message);
         }
     }
 }

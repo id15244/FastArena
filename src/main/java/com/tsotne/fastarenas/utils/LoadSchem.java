@@ -143,8 +143,10 @@ public class LoadSchem {
                     config.getString("default-spawn", "default")
             );
 
-            int batchSize = Math.max(1, config.getInt("reset-batch-size", DEFAULT_BATCH_SIZE));
-            long batchDelay = Math.max(0L, config.getLong("reset-batch-delay", DEFAULT_BATCH_DELAY));
+            int configuredBatchSize = plugin.getConfigManager().getResetBatchSize();
+            long configuredBatchDelay = plugin.getConfigManager().getResetBatchDelay();
+            final int batchSize = configuredBatchSize < 1 ? DEFAULT_BATCH_SIZE : configuredBatchSize;
+            final long batchDelay = configuredBatchDelay < 0L ? DEFAULT_BATCH_DELAY : configuredBatchDelay;
 
             BlockVector3 pasteTo = BlockVector3.at(minX, minY, minZ);
             com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(bukkitWorld);

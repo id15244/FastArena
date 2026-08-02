@@ -1,5 +1,5 @@
 name: FastArenas
-version: "2.5"
+version: "2.5.1"
 main: com.tsotne.fastarenas.FastArenas    
 api-version: "1.20"
 author: geocotne
